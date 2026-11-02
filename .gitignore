@@ -1,0 +1,5 @@
+# Local captures and diagnostic output may contain private information.
+*.pcap
+*.pcapng
+*.log
+.env
