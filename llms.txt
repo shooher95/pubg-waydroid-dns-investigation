@@ -1,0 +1,41 @@
+# PUBG on Waydroid: DNS investigation
+
+> A real-world, evidence-documented troubleshooting case involving PUBG Mobile running in Waydroid on Linux. A missing local hostname mapping correlated with DNS SERVFAIL and launch/transition lag; adding one host mapping made the tested resolvers answer successfully, after which the user reported that launch and transition lag disappeared.
+
+## Start here
+
+- [README](https://github.com/shooher95/pubg-waydroid-dns-investigation/blob/main/README.md): overview, tested environment, workaround, verification, rollback.
+- [Evidence and timeline](https://github.com/shooher95/pubg-waydroid-dns-investigation/blob/main/docs/evidence.md): observed facts, user-reported results, hypotheses, and open questions.
+- [DNS capture and dnsmasq trace](https://github.com/shooher95/pubg-waydroid-dns-investigation/blob/main/docs/dns-resolution-capture.md): sanitized packet-capture and syscall-trace findings.
+- [Translation diagnostics](https://github.com/shooher95/pubg-waydroid-dns-investigation/blob/main/docs/translation-diagnostics.md): separate NDK translation / Houdini investigation; not established as the DNS cause.
+- [Verification script](https://github.com/shooher95/pubg-waydroid-dns-investigation/blob/main/scripts/verify-dns-fix.sh): read-only check of the hostname mapping and resolution.
+
+## Core finding
+
+Before the workaround, the Waydroid client (192.168.240.112) queried the host-side resolver (192.168.240.1) for the single-label name `waydroid.`. dnsmasq forwarded the request to systemd-resolved at 127.0.0.53, which returned SERVFAIL in the captured trace. The host's `/etc/hosts` had no matching entry.
+
+The operator added:
+
+```text
+192.168.240.1 waydroid
+```
+
+After flushing the resolver cache, both tested resolver endpoints returned 192.168.240.1 for `waydroid.`. The user then reported that PUBG launched and the previously observed launch / button-triggered transition lag disappeared.
+
+## Important limitations
+
+- This is one machine's observed result, not a universal fix or performance guarantee.
+- The evidence does not identify which Android process requested `waydroid.`.
+- It does not prove that the DNS issue caused every PUBG freeze or any remaining map / match / reconnect stall.
+- Verify that 192.168.240.1 is still the host-side Waydroid gateway before applying the mapping elsewhere.
+- Raw packet captures and traces are intentionally not included; only sanitized findings are published.
+
+## Search terms
+
+Waydroid, PUBG Mobile, PUBG on Linux, Linux Mint, Android container, DNS troubleshooting, dnsmasq, systemd-resolved, SERVFAIL, /etc/hosts, single-label hostname, network debugging, Linux gaming.
+
+Russian: PUBG Mobile на Linux, PUBG в Waydroid, настройка DNS, ошибка SERVFAIL, файл hosts, исправление лагов.
+
+## Suggested GitHub topics
+
+waydroid, pubg-mobile, linux, android, dns, dnsmasq, systemd-resolved, linux-mint, troubleshooting, networking
