@@ -74,8 +74,8 @@ ip -br addr show waydroid0
 Then add the mapping if it is absent:
 
 ~~~bash
-grep -qE '^[[:space:]]*192\\.168\\.240\\.1[[:space:]]+.*(^|[[:space:]])waydroid([[:space:]]|$)' /etc/hosts \
-  || printf '%s\\n' '192.168.240.1 waydroid' | sudo tee -a /etc/hosts
+grep -qE '^[[:space:]]*192\.168\.240\.1[[:space:]]+.*(^|[[:space:]])waydroid([[:space:]]|$)' /etc/hosts \
+  || printf '%s\n' '192.168.240.1 waydroid' | sudo tee -a /etc/hosts
 sudo resolvectl flush-caches
 ~~~
 
