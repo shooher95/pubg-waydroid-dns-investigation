@@ -86,3 +86,19 @@ Do not blindly apply this address to a different Waydroid/network configuration.
 ## Evidence quality and limitations
 
 The repository includes sanitized summaries of the actual terminal output. Raw captures and trace files remain local and are not committed. The investigation does not yet establish why the Android-side client requested waydroid, or whether all remaining match/map/reconnect stalls share this cause. See docs/evidence.md, docs/dns-resolution-capture.md, and docs/translation-diagnostics.md.
+
+## The investigation crew
+
+Every serious investigation needs a crew. Ours was assembled from the finest available AI specialists:
+
+- **GPT — navigator:** kept the investigation on course, connected the clues, and tried very hard not to send us into the DNS wilderness.
+- **DeepSeek — psychological support:** provided emotional stability while we stared into packet captures and questioned our life choices.
+- **Gemini — fresh-information search engine:** went looking for current documentation and clues from the outside world.
+- **The human operator — chief investigator:** ran the commands, captured the evidence, pressed the PUBG buttons, and discovered that one line in `/etc/hosts` could apparently defeat an entire boss fight.
+
+**Final boss:** `waydroid.`  
+**Weapon:** `192.168.240.1 waydroid`  
+**Boss health:** mysteriously reduced to zero.
+
+*No AI was harmed during this investigation. A few terminal tabs, however, may never recover.*
+
