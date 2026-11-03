@@ -2,6 +2,19 @@
 
 ## Scope
 
+## Tested environment
+
+The reported test machine was:
+
+- Host OS: Linux Mint 22.3 (KDE Plasma, X11).
+- CPU: AMD FX-8350.
+- GPU: NVIDIA GeForce GTX 1060 6 GB.
+- Host NVIDIA driver: 580.178.04.
+- Kernel: XanMod 7.2.14-x64v2-xanmod1.
+- Android environment: Waydroid, Android 13 / LineageOS 20.
+
+These are the user's reported configuration details for this investigation; they are not requirements for the DNS workaround.
+
 This document records observations from the PUBG + Waydroid DNS investigation. It separates directly captured results, user-reported behavior, and causal hypotheses.
 
 ## Reported environment and symptom pattern
@@ -109,6 +122,10 @@ sudo resolvectl flush-caches
 ~~~
 
 The backup file is on the user's machine and is not stored in this repository.
+
+## Related translation diagnostics
+
+NDK translation and Houdini behavior were also investigated on this machine. Those observations are documented separately in [translation-diagnostics.md](translation-diagnostics.md). They include a default-mode splash profile dominated by HeavyOptimizer functions, a later light-translate-or-interpret profile with InterpretInsn activity, a separate Houdini map-load stall, and a tombstone whose recorded termination was SIGABRT with the message “Cannot process signal 11.” These are separate diagnostic observations; they do not establish the cause of the DNS failure.
 
 ## Open questions
 
