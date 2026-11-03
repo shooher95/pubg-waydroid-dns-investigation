@@ -1,6 +1,10 @@
 # PUBG on Waydroid: DNS investigation
 
-This repository documents a DNS-resolution failure observed in the Waydroid network, the hosts-file workaround, and the measured before/after result.
+A documented Linux troubleshooting case: a single-label DNS lookup for `waydroid.` failed through the Waydroid host resolver; adding the host mapping `192.168.240.1 waydroid` made both tested resolvers return the expected address. Immediately afterward, the user reported that PUBG launched and the previously observed launch / button-transition lag disappeared.
+
+**Scope:** evidence-backed case study and workaround for one reported Waydroid setup — not a universal PUBG performance tweak.
+
+**Languages:** English documentation; key search terms are also listed in Russian below.
 
 ## Tested environment
 
@@ -37,6 +41,7 @@ This is a strong before/after correlation supported by packet capture, dnsmasq s
 - docs/dns-resolution-capture.md — sanitized packet-capture and dnsmasq trace findings.
 - docs/translation-diagnostics.md — separate NDK translation / Houdini observations; these are not established as the cause of the DNS issue.
 - scripts/verify-dns-fix.sh — read-only check for the expected resolution and hosts-file entry.
+- llms.txt — concise project map and evidence summary for AI assistants and other automated readers.
 
 ## Verify the workaround
 
@@ -69,7 +74,7 @@ ip -br addr show waydroid0
 Then add the mapping if it is absent:
 
 ~~~bash
-grep -qE '^[[:space:]]*192\\.168\\.240\\.1[[:space:]]+.*(^|[[:space:]])waydroid([[:space:]]|$)' /etc/hosts \\
+grep -qE '^[[:space:]]*192\\.168\\.240\\.1[[:space:]]+.*(^|[[:space:]])waydroid([[:space:]]|$)' /etc/hosts \
   || printf '%s\\n' '192.168.240.1 waydroid' | sudo tee -a /etc/hosts
 sudo resolvectl flush-caches
 ~~~
@@ -87,6 +92,14 @@ Do not blindly apply this address to a different Waydroid/network configuration.
 
 The repository includes sanitized summaries of the actual terminal output. Raw captures and trace files remain local and are not committed. The investigation does not yet establish why the Android-side client requested waydroid, or whether all remaining match/map/reconnect stalls share this cause. See docs/evidence.md, docs/dns-resolution-capture.md, and docs/translation-diagnostics.md.
 
+## Search keywords
+
+**English:** Waydroid, PUBG Mobile, PUBG on Linux, Linux Mint, Android container, DNS troubleshooting, DNS resolution, dnsmasq, systemd-resolved, /etc/hosts, single-label hostname, SERVFAIL, network debugging, Linux gaming.
+
+**Русский:** Waydroid, PUBG Mobile на Linux, PUBG в Waydroid, Linux Mint, DNS, настройка DNS, dnsmasq, systemd-resolved, ошибка SERVFAIL, файл hosts, контейнер Android, исправление лагов.
+
+Suggested GitHub repository topics: `waydroid`, `pubg-mobile`, `linux`, `android`, `dns`, `dnsmasq`, `systemd-resolved`, `linux-mint`, `troubleshooting`, `networking`.
+
 ## The investigation crew
 
 Every serious investigation needs a crew. Ours was assembled from the finest available AI specialists:
@@ -101,4 +114,3 @@ Every serious investigation needs a crew. Ours was assembled from the finest ava
 **Boss health:** mysteriously reduced to zero.
 
 *No AI was harmed during this investigation. A few terminal tabs, however, may never recover.*
-
