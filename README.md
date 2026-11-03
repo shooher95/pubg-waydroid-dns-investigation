@@ -2,6 +2,21 @@
 
 This repository documents a DNS-resolution failure observed in the Waydroid network, the hosts-file workaround, and the measured before/after result.
 
+## Tested environment
+
+The investigation was performed on this reported setup:
+
+| Component | Configuration |
+|---|---|
+| Host OS | Linux Mint 22.3 (KDE Plasma, X11) |
+| CPU | AMD FX-8350 |
+| GPU | NVIDIA GeForce GTX 1060 6 GB |
+| Host NVIDIA driver | 580.178.04 |
+| Kernel | XanMod 7.2.14-x64v2-xanmod1 |
+| Android container | Waydroid, Android 13 / LineageOS 20 |
+
+These details describe the test machine, not a claim that the workaround is specific to this hardware.
+
 ## Summary
 
 A DNS request from the Waydroid client (192.168.240.112) for the single-label hostname **waydroid.** reached the host's dnsmasq at **192.168.240.1**. Before the workaround, dnsmasq forwarded the query to the systemd-resolved stub at **127.0.0.53**, which returned **SERVFAIL**.
@@ -20,6 +35,7 @@ This is a strong before/after correlation supported by packet capture, dnsmasq s
 
 - docs/evidence.md — timeline, evidence classification, interpretation, and open questions.
 - docs/dns-resolution-capture.md — sanitized packet-capture and dnsmasq trace findings.
+- docs/translation-diagnostics.md — separate NDK translation / Houdini observations; these are not established as the cause of the DNS issue.
 - scripts/verify-dns-fix.sh — read-only check for the expected resolution and hosts-file entry.
 
 ## Verify the workaround
@@ -53,8 +69,8 @@ ip -br addr show waydroid0
 Then add the mapping if it is absent:
 
 ~~~bash
-grep -qE '^[[:space:]]*192\.168\.240\.1[[:space:]]+.*(^|[[:space:]])waydroid([[:space:]]|$)' /etc/hosts \
-  || printf '%s\n' '192.168.240.1 waydroid' | sudo tee -a /etc/hosts
+grep -qE '^[[:space:]]*192\\.168\\.240\\.1[[:space:]]+.*(^|[[:space:]])waydroid([[:space:]]|$)' /etc/hosts \\
+  || printf '%s\\n' '192.168.240.1 waydroid' | sudo tee -a /etc/hosts
 sudo resolvectl flush-caches
 ~~~
 
@@ -69,4 +85,4 @@ Do not blindly apply this address to a different Waydroid/network configuration.
 
 ## Evidence quality and limitations
 
-The repository includes sanitized summaries of the actual terminal output. Raw captures and trace files remain local and are not committed. The investigation does not yet establish why the Android-side client requested waydroid, or whether all remaining match/map/reconnect stalls share this cause. See docs/evidence.md and docs/dns-resolution-capture.md.
+The repository includes sanitized summaries of the actual terminal output. Raw captures and trace files remain local and are not committed. The investigation does not yet establish why the Android-side client requested waydroid, or whether all remaining match/map/reconnect stalls share this cause. See docs/evidence.md, docs/dns-resolution-capture.md, and docs/translation-diagnostics.md.
